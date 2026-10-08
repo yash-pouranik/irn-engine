@@ -269,6 +269,57 @@ def detect(
     typer.secho(f"D2 Detections Exported Successfully ({len(records)} items) to {out_path}", fg=typer.colors.GREEN)
 
 
+@app.command("ingest-idd")
+def ingest_idd(
+    seq_dir: Path = typer.Option(
+        Path(r"D:\final\DATASET\Primary\idd_multimodal\primary\d0"),
+        "--seq-dir",
+        help="Path to IDD Multimodal sequence directory (e.g. primary/d0)"
+    ),
+    out_dir: Path = typer.Option(
+        Path("data/idd_d0"),
+        "--out",
+        help="Destination directory for normalized GPS and D2 Parquet"
+    ),
+    pothole_model: Optional[Path] = typer.Option(
+        Path(r"D:\Major_2\roadscope\backend\models\potholes.pt") if Path(r"D:\Major_2\roadscope\backend\models\potholes.pt").exists() else None,
+        "--pothole-model",
+        help="Path to trained YOLO pothole detector weights (.pt)"
+    ),
+    vehicle_model: Optional[Path] = typer.Option(
+        Path(r"D:\Major_2\roadscope\backend\yolo11n.pt") if Path(r"D:\Major_2\roadscope\backend\yolo11n.pt").exists() else None,
+        "--vehicle-model",
+        help="Path to YOLO vehicle detector weights (.pt)"
+    ),
+    sample_step: int = typer.Option(10, "--sample-step", help="Subsample video frames by this factor"),
+    max_frames: Optional[int] = typer.Option(150, "--max-frames", help="Maximum frames to run inference on"),
+    seq_id: str = typer.Option("idd_d0", "--seq-id", help="Sequence ID identifier"),
+) -> None:
+    """Ingest real IDD Multimodal driving sequence, run YOLO inference, and export D2 parquet + normalized GPS."""
+    from irn.m2_cv_interface.idd_adapter import IDDAdapter
+
+    typer.secho(f"Ingesting IDD Multimodal sequence from: {seq_dir}", fg=typer.colors.CYAN)
+    adapter = IDDAdapter(sequence_id=seq_id)
+    res = adapter.process_sequence(
+        sequence_dir=seq_dir,
+        out_dir=out_dir,
+        pothole_weights=pothole_model,
+        vehicle_weights=vehicle_model,
+        sample_step=sample_step,
+        max_frames=max_frames,
+    )
+    typer.secho("IDD Multimodal Ingestion Successful!", fg=typer.colors.GREEN)
+    typer.echo(f"  - Sequence ID:    {res['sequence_id']}")
+    typer.echo(f"  - Trajectory Bbox: {res['bbox']}")
+    typer.echo(f"  - Normalized GPS: {res['gps_csv']} ({res['num_gps_fixes']} fixes)")
+    typer.echo(f"  - D2 Detections:  {res['detections_parquet']} ({res['num_detections']} records)")
+    typer.secho(f"\nNext Steps to run full pipeline on this sequence:", fg=typer.colors.YELLOW)
+    bbox_str = f"{res['bbox'][0]},{res['bbox'][1]},{res['bbox'][2]},{res['bbox'][3]}"
+    typer.echo(f"  1. Fetch OSM Graph:  irn fetch --bbox \"{bbox_str}\" --out {out_dir}/d1_graph")
+    typer.echo(f"  2. Geospatial Fusion: irn fuse --graph {out_dir}/d1_graph/edges.gpkg --detections {res['detections_parquet']} --gps {res['gps_csv']} --out-d3 {out_dir}/d3_store/anomalies.db --out-d4 {out_dir}/d4_enriched --utm-zone 44")
+    typer.echo(f"  3. Compile Scenario:  irn compile --enriched {out_dir}/d4_enriched/enriched_edges.parquet --anomalies {out_dir}/d4_enriched/anomalies.parquet --nodes {out_dir}/d1_graph/nodes.gpkg --out output_{seq_id} --utm-zone 44")
+
+
 @app.command()
 def synth(
     out_dir: Path = typer.Option(Path("data/synthetic"), "--out", help="Output directory for synthetic world"),
