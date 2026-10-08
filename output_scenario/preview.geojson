@@ -7,19 +7,502 @@
         "type": "LineString",
         "coordinates": [
           [
-            500000.0,
-            2000000.0
+            217438.4451535415,
+            1929644.201772646
           ],
           [
-            500000.0,
-            2000150.0
+            218767.05480305856,
+            1929625.750479507
           ]
         ]
       },
       "properties": {
         "edge_id": "1001_1002_0",
-        "width_dir_m": 7.5,
-        "lanes_effective": 2
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            217438.4451535415,
+            1929644.201772646
+          ],
+          [
+            217453.86329380603,
+            1930751.4852257362
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1001_1004_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218767.05480305856,
+            1929625.750479507
+          ],
+          [
+            217438.4451535415,
+            1929644.201772646
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1002_1001_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218767.05480305856,
+            1929625.750479507
+          ],
+          [
+            220095.65338580322,
+            1929607.3863763718
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1002_1003_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218767.05480305856,
+            1929625.750479507
+          ],
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1002_1005_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            217453.86329380603,
+            1930751.4852257362
+          ],
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1004_1005_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            217453.86329380603,
+            1930751.4852257362
+          ],
+          [
+            217438.4451535415,
+            1929644.201772646
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1004_1001_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            217453.86329380603,
+            1930751.4852257362
+          ],
+          [
+            217469.2900118695,
+            1931858.7695495018
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1004_1007_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220095.65338580322,
+            1929607.3863763718
+          ],
+          [
+            218767.05480305856,
+            1929625.750479507
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1003_1002_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220095.65338580322,
+            1929607.3863763718
+          ],
+          [
+            220110.92615537497,
+            1930714.6513853536
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1003_1006_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ],
+          [
+            217453.86329380603,
+            1930751.4852257362
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1005_1004_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ],
+          [
+            220110.92615537497,
+            1930714.6513853536
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1005_1006_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ],
+          [
+            218767.05480305856,
+            1929625.750479507
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1005_1002_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ],
+          [
+            218797.75424698414,
+            1931840.299770857
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1005_1008_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220110.92615537497,
+            1930714.6513853536
+          ],
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1006_1005_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220110.92615537497,
+            1930714.6513853536
+          ],
+          [
+            220095.65338580322,
+            1929607.3863763718
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1006_1003_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220110.92615537497,
+            1930714.6513853536
+          ],
+          [
+            220126.20742193185,
+            1931821.917269492
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1006_1009_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            217469.2900118695,
+            1931858.7695495018
+          ],
+          [
+            218797.75424698414,
+            1931840.299770857
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1007_1008_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            217469.2900118695,
+            1931858.7695495018
+          ],
+          [
+            217453.86329380603,
+            1930751.4852257362
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1007_1004_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218797.75424698414,
+            1931840.299770857
+          ],
+          [
+            217469.2900118695,
+            1931858.7695495018
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1008_1007_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218797.75424698414,
+            1931840.299770857
+          ],
+          [
+            220126.20742193185,
+            1931821.917269492
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1008_1009_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            218797.75424698414,
+            1931840.299770857
+          ],
+          [
+            218782.40025632572,
+            1930733.0246887214
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1008_1005_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220126.20742193185,
+            1931821.917269492
+          ],
+          [
+            218797.75424698414,
+            1931840.299770857
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1009_1008_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            220126.20742193185,
+            1931821.917269492
+          ],
+          [
+            220110.92615537497,
+            1930714.6513853536
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1009_1006_0",
+        "width_dir_m": 3.75,
+        "lanes_effective": 1
       }
     }
   ]

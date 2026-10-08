@@ -7,9 +7,6 @@ from typing import Optional
 import typer
 
 from irn.common.logger import log_event, logger
-from irn.m1_fetcher.osm_fetcher import OSMFetcher
-from irn.m2_cv_interface.detector import MockDetector
-from irn.m2_cv_interface.schema import load_detections_parquet
 
 app = typer.Typer(
     name="irn",
@@ -37,6 +34,52 @@ def info() -> None:
 
 
 @app.command()
+def run(
+    config: Path = typer.Option(
+        Path("configs/run_config.yaml"),
+        "--config",
+        help="Path to pipeline run_config.yaml"
+    ),
+    out_dir: Path = typer.Option(
+        Path("output_scenario"),
+        "--out",
+        help="Destination directory for scenario bundle"
+    ),
+    offline: bool = typer.Option(
+        True,
+        "--offline/--live",
+        help="Whether to use calibrated offline network fallback or query live Overpass API"
+    ),
+) -> None:
+    """Execute end-to-end IRN pipeline (M1 -> M2 -> M3 -> M4 -> Manifest)."""
+    from irn.orchestrator import PipelineOrchestrator
+
+    typer.secho("Starting End-to-End IRN Simulation Synthesis...", fg=typer.colors.CYAN)
+    orch = PipelineOrchestrator(config_path=config)
+    res = orch.run_end_to_end(output_dir=out_dir, use_offline_network=offline)
+
+    typer.secho(f"Scenario successfully synthesized at {out_dir}!", fg=typer.colors.GREEN)
+    report_text = orch.generate_report(out_dir)
+    typer.echo(report_text)
+
+
+@app.command()
+def report(
+    scenario: Path = typer.Option(
+        Path("output_scenario"),
+        "--scenario",
+        help="Path to compiled scenario directory"
+    ),
+) -> None:
+    """Display execution statistics and validation report for a scenario bundle."""
+    from irn.orchestrator import PipelineOrchestrator
+
+    orch = PipelineOrchestrator()
+    report_text = orch.generate_report(scenario)
+    typer.echo(report_text)
+
+
+@app.command()
 def fetch(
     bbox: Optional[str] = typer.Option(
         None,
@@ -57,6 +100,8 @@ def fetch(
     offline: bool = typer.Option(False, "--offline", help="Generate calibrated offline network without external Overpass API request"),
 ) -> None:
     """Fetch drivable road network from OSM, project to local UTM, clean, and export Contract D1."""
+    from irn.m1_fetcher.osm_fetcher import OSMFetcher
+
     fetcher = OSMFetcher(timeout=timeout)
 
     if bbox:
@@ -213,6 +258,8 @@ def detect(
     frames: int = typer.Option(60, "--frames", help="Number of frames to generate in mock mode"),
 ) -> None:
     """Run detection engine (or mock generator) and export Contract D2 detections.parquet."""
+    from irn.m2_cv_interface.detector import MockDetector
+
     typer.secho(f"Running detection ingestion for sequence '{sequence_id}'...", fg=typer.colors.CYAN)
     detector = MockDetector(sequence_id=sequence_id)
     records = detector.generate_synthetic_drive_detections(num_frames=frames)

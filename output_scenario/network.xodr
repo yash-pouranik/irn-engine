@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenDRIVE>
-    <header revMajor="1" revMinor="6" name="IRN_Network" version="1.0" date="2026-10-08T09:07:20.044437+00:00">
+    <header revMajor="1" revMinor="6" name="IRN_Network" version="1.0" date="2026-10-08T09:23:41.007845+00:00">
         <geoReference><![CDATA[+proj=utm +zone=44 +north +datum=WGS84 +units=m +no_defs]]></geoReference>
     </header>
-    <road name="1001_1002_0" length="150.000" id="1" junction="-1" rule="LHT">
+    <road name="1001_1002_0" length="1328.738" id="1" junction="-1" rule="LHT">
         <link/>
         <planView>
-            <geometry s="0.000" x="500000.000" y="2000000.000" hdg="0.0000" length="150.000">
+            <geometry s="0.000" x="217438.445" y="1929644.202" hdg="1.5847" length="1328.738">
                 <line/>
             </geometry>
         </planView>
@@ -17,7 +17,497 @@
                 </center>
                 <left>
                     <lane id="1" type="driving" level="false">
-                        <width sOffset="0.000" a="7.500" b="0.0" c="0.0" d="0.0"/>
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1001_1004_0" length="1107.391" id="2" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="217438.445" y="1929644.202" hdg="0.0139" length="1107.391">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1002_1001_0" length="1328.738" id="3" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218767.055" y="1929625.750" hdg="4.7263" length="1328.738">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1002_1003_0" length="1328.725" id="4" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218767.055" y="1929625.750" hdg="1.5846" length="1328.725">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1002_1005_0" length="1107.381" id="5" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218767.055" y="1929625.750" hdg="0.0139" length="1107.381">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects>
+            <object id="1" type="obstacle" name="pothole" s="510.978" t="0.196" zOffset="0.000" validLength="0.800" width="1.000" length="0.800" hdg="0.000" pitch="0.000" roll="0.000"/>
+            <object id="2" type="obstacle" name="auto_rickshaw" s="928.916" t="-0.968" zOffset="0.000" validLength="0.800" width="1.000" length="0.800" hdg="0.000" pitch="0.000" roll="0.000"/>
+            <object id="3" type="obstacle" name="two_wheeler" s="988.127" t="1.071" zOffset="0.000" validLength="0.800" width="1.000" length="0.800" hdg="0.000" pitch="0.000" roll="0.000"/>
+            <object id="4" type="obstacle" name="speed_breaker" s="953.925" t="-0.094" zOffset="0.000" validLength="0.800" width="1.000" length="0.800" hdg="0.000" pitch="0.000" roll="0.000"/>
+        </objects>
+    </road>
+    <road name="1004_1005_0" length="1328.665" id="6" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="217453.863" y="1930751.485" hdg="1.5847" length="1328.665">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1004_1001_0" length="1107.391" id="7" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="217453.863" y="1930751.485" hdg="3.1555" length="1107.391">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1004_1007_0" length="1107.392" id="8" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="217453.863" y="1930751.485" hdg="0.0139" length="1107.392">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1003_1002_0" length="1328.725" id="9" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220095.653" y="1929607.386" hdg="4.7262" length="1328.725">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1003_1006_0" length="1107.370" id="10" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220095.653" y="1929607.386" hdg="0.0138" length="1107.370">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1005_1004_0" length="1328.665" id="11" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218782.400" y="1930733.025" hdg="4.7263" length="1328.665">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1005_1006_0" length="1328.653" id="12" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218782.400" y="1930733.025" hdg="1.5846" length="1328.653">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1005_1002_0" length="1107.381" id="13" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218782.400" y="1930733.025" hdg="3.1555" length="1107.381">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1005_1008_0" length="1107.382" id="14" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218782.400" y="1930733.025" hdg="0.0139" length="1107.382">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects>
+            <object id="1" type="obstacle" name="two_wheeler" s="77.912" t="0.857" zOffset="0.000" validLength="0.800" width="1.000" length="0.800" hdg="0.000" pitch="0.000" roll="0.000"/>
+        </objects>
+    </road>
+    <road name="1006_1005_0" length="1328.653" id="15" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220110.926" y="1930714.651" hdg="4.7262" length="1328.653">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1006_1003_0" length="1107.370" id="16" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220110.926" y="1930714.651" hdg="3.1554" length="1107.370">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1006_1009_0" length="1107.371" id="17" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220110.926" y="1930714.651" hdg="0.0138" length="1107.371">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1007_1008_0" length="1328.593" id="18" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="217469.290" y="1931858.770" hdg="1.5847" length="1328.593">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1007_1004_0" length="1107.392" id="19" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="217469.290" y="1931858.770" hdg="3.1555" length="1107.392">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1008_1007_0" length="1328.593" id="20" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218797.754" y="1931840.300" hdg="4.7263" length="1328.593">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1008_1009_0" length="1328.580" id="21" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218797.754" y="1931840.300" hdg="1.5846" length="1328.580">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1008_1005_0" length="1107.382" id="22" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="218797.754" y="1931840.300" hdg="3.1555" length="1107.382">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1009_1008_0" length="1328.580" id="23" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220126.207" y="1931821.917" hdg="4.7262" length="1328.580">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+    <road name="1009_1006_0" length="1107.371" id="24" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="220126.207" y="1931821.917" hdg="3.1554" length="1107.371">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="3.750" b="0.0" c="0.0" d="0.0"/>
                     </lane>
                 </left>
             </laneSection>

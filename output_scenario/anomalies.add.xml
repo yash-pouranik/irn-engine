@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Localized Physical Road Hazards & Speed Drop Zones -->
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <poi id="hazard_da616dda" type="pothole" color="red" lane="1002_1005_0_0" pos="510.98" posLat="0.20" width="1.00" height="0.80" layer="2"/>
+    <poi id="hazard_03dfd487" type="auto_rickshaw" color="magenta" lane="1002_1005_0_0" pos="928.92" posLat="-0.97" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_8dea3e1d" type="two_wheeler" color="magenta" lane="1002_1005_0_0" pos="988.13" posLat="1.07" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_65b06f83" type="speed_breaker" color="orange" lane="1002_1005_0_0" pos="953.93" posLat="-0.09" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_512f65b9" type="two_wheeler" color="magenta" lane="1005_1008_0_0" pos="77.91" posLat="0.86" width="3.00" height="1.00" layer="2"/>
 </additional>

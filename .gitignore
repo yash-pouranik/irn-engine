@@ -14,6 +14,7 @@ htmlcov/
 
 # Data caches (keep small fixtures, ignore runtime blobs if needed)
 data/d1_real_test/
+output_scenario/pipeline_data/
 *.tmp
 
 # IDE
