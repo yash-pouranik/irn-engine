@@ -33,9 +33,12 @@ def find_netconvert_binary() -> Optional[Path]:
 
     # 3. Common Windows install locations
     common_win_paths = [
+        Path(r"C:\Program Files (x86)\SUMO\bin\netconvert.exe"),
+        Path(r"C:\Program Files\SUMO\bin\netconvert.exe"),
         Path(r"C:\Program Files (x86)\Eclipse\Sumo\bin\netconvert.exe"),
         Path(r"C:\Program Files\Eclipse\Sumo\bin\netconvert.exe"),
         Path(r"C:\sumo\bin\netconvert.exe"),
+        Path(r"D:\sumo\bin\netconvert.exe"),
     ]
     for p in common_win_paths:
         if p.exists():

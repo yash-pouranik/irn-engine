@@ -2,6 +2,7 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
     <input>
         <net-file value="network.net.xml"/>
+        <route-files value="routes.rou.xml"/>
         <additional-files value="vtypes.add.xml,anomalies.add.xml"/>
     </input>
     <processing>
