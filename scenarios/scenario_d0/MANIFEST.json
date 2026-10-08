@@ -1,0 +1,32 @@
+{
+  "project": "IRN Engine",
+  "sequence_id": "d0",
+  "version": "0.1.0",
+  "execution_timestamp": "2026-10-08T15:53:51.112211+00:00",
+  "total_elapsed_sec": 143.42,
+  "fusion_throughput_dets_per_sec": 994.9,
+  "traffic_rule": "LHT",
+  "utm_zone": 44,
+  "statistics": {
+    "num_gps_fixes": 2211,
+    "num_detections_ingested": 264,
+    "num_raw_observations_fused": 115,
+    "num_canonical_anomalies": 115,
+    "num_confirmed_anomalies": 0
+  },
+  "validation": {
+    "opendrive_valid": true,
+    "sumo_scenario_valid": true
+  },
+  "artifact_sha256": {
+    "edges_gpkg": "b91863b79b502fd4b9ae3e04a88ce57a93c88507aec91aa67a14efac513e352e",
+    "nodes_gpkg": "93e0db4aaae12ad78e8046605a3398bca4cf823fd5a271bacd8e10a1e1945083",
+    "detections_parquet": "f9d7927842e054936c2886d04d5582738a8057d7b710a3165bc2ac7dfe4a4cf5",
+    "anomalies_db": "e3e131ae31e83a6f6ce71811b529970f93838110338fc180e348fda85dc0aa47",
+    "enriched_edges_parquet": "eb851579659613c4cf05ad507a305743deb4b6073c6296ecd4fc154a0a0a14c7",
+    "anomalies_parquet": "0da6b3a0b193f506945eb7f5f52de36d92715163ce342f981901273eac29a192",
+    "network_net_xml": "7a9832d8d883cbee8cedf7d1f915e6971845b7078e3053da4dd7b80c35e140e1",
+    "network_xodr": "a3e060dd3cc5a178ebd43d5ae6b1ec100779f0eb5424c26a86d0cf95a60ca628",
+    "scenario_sumocfg": "789fcdaa020581e4d9286b72b1ddfe59eeade1f83e10fc20312170154d571b25"
+  }
+}

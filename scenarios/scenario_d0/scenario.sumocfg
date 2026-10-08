@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+    <input>
+        <net-file value="network.net.xml"/>
+        <additional-files value="vtypes.add.xml,anomalies.add.xml"/>
+    </input>
+    <processing>
+        <!-- Eclipse SUMO Sublane Model Activation -->
+        <lateral-resolution value="0.60"/>
+        <step-length value="0.10"/>
+        <collision.action value="warn"/>
+        <collision.stoptime value="2"/>
+    </processing>
+    <time>
+        <begin value="0"/>
+        
+    </time>
+</configuration>

@@ -1,0 +1,21 @@
+{
+  "project": "IRN Engine",
+  "scenario": "corridor_multi_pass",
+  "version": "0.1.0",
+  "traffic_rule": "LHT",
+  "multi_pass_sequences": [
+    "d0",
+    "d1",
+    "d2"
+  ],
+  "statistics": {
+    "num_gps_fixes": 6423,
+    "num_detections_ingested": 873,
+    "num_canonical_anomalies": 352,
+    "num_confirmed_anomalies": 23
+  },
+  "validation": {
+    "opendrive_valid": true,
+    "sumo_scenario_valid": true
+  }
+}

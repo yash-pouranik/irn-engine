@@ -320,6 +320,69 @@ def ingest_idd(
     typer.echo(f"  3. Compile Scenario:  irn compile --enriched {out_dir}/d4_enriched/enriched_edges.parquet --anomalies {out_dir}/d4_enriched/anomalies.parquet --nodes {out_dir}/d1_graph/nodes.gpkg --out output_{seq_id} --utm-zone 44")
 
 
+@app.command("batch-idd")
+def batch_idd(
+    dataset_dir: Path = typer.Option(
+        Path(r"D:\final\DATASET\Primary\idd_multimodal\primary"),
+        "--dataset-dir",
+        help="Root path containing IDD sequence directories (d0, d1, d2...)"
+    ),
+    out_dir: Path = typer.Option(
+        Path("scenarios"),
+        "--out",
+        help="Base directory for output scenarios and multi-pass corridor bundle"
+    ),
+    sequences: Optional[str] = typer.Option(
+        None,
+        "--sequences",
+        help="Comma-separated sequence names to process (e.g. 'd0,d1,d2'). Default: all found"
+    ),
+    pothole_model: Optional[Path] = typer.Option(
+        Path(r"D:\Major_2\roadscope\backend\models\potholes.pt") if Path(r"D:\Major_2\roadscope\backend\models\potholes.pt").exists() else None,
+        "--pothole-model",
+        help="Path to trained YOLO pothole detector weights (.pt)"
+    ),
+    vehicle_model: Optional[Path] = typer.Option(
+        Path(r"D:\Major_2\roadscope\backend\yolo11n.pt") if Path(r"D:\Major_2\roadscope\backend\yolo11n.pt").exists() else None,
+        "--vehicle-model",
+        help="Path to YOLO vehicle detector weights (.pt)"
+    ),
+    sample_step: int = typer.Option(10, "--sample-step", help="Subsample video frames by this factor"),
+    max_frames: Optional[int] = typer.Option(100, "--max-frames", help="Maximum frames per sequence to run inference on"),
+    unified: bool = typer.Option(True, "--unified/--isolated", help="Enable multi-pass Hungarian cross-pass fusion ledger"),
+) -> None:
+    """Run end-to-end IRN batch processing across all IDD multimodal sequences with multi-pass fusion."""
+    from irn.orchestrator import PipelineOrchestrator
+
+    seq_list = [s.strip() for s in sequences.split(",")] if sequences else None
+    orch = PipelineOrchestrator()
+    typer.secho(f"Starting IDD Batch Pipeline for dataset: {dataset_dir}", fg=typer.colors.CYAN)
+    
+    batch_res = orch.run_idd_batch(
+        dataset_dir=dataset_dir,
+        output_base_dir=out_dir,
+        sequences=seq_list,
+        pothole_weights=pothole_model,
+        vehicle_weights=vehicle_model,
+        sample_step=sample_step,
+        max_frames=max_frames,
+        unified_multi_pass=unified,
+    )
+
+    typer.secho("\n==================================================", fg=typer.colors.GREEN)
+    typer.secho("IDD MULTI-SEQUENCE BATCH PROCESSING COMPLETE!", fg=typer.colors.GREEN)
+    typer.secho("==================================================", fg=typer.colors.GREEN)
+    for seq, res in batch_res["sequence_results"].items():
+        st = res["manifest"]["statistics"]
+        typer.echo(f"  * Sequence {seq}: {st['num_detections_ingested']} dets -> {st['num_canonical_anomalies']} anomalies mapped -> {res['output_dir']}")
+
+    if batch_res.get("corridor_scenario"):
+        typer.secho(f"\nUnified Multi-Pass Corridor Scenario compiled in: {out_dir}/corridor_multi_pass", fg=typer.colors.YELLOW)
+        typer.echo(f"  - OpenDRIVE: {out_dir}/corridor_multi_pass/network.xodr")
+        typer.echo(f"  - SUMO Config: {out_dir}/corridor_multi_pass/scenario.sumocfg")
+        typer.echo(f"  - Preview: {out_dir}/corridor_multi_pass/preview.geojson")
+
+
 @app.command()
 def synth(
     out_dir: Path = typer.Option(Path("data/synthetic"), "--out", help="Output directory for synthetic world"),

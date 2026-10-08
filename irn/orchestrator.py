@@ -238,3 +238,243 @@ This simulation network was synthesized by the **IRN Engine (Automated Road Netw
         lines.append("=" * 65)
 
         return "\n".join(lines)
+
+    def run_idd_sequence(
+        self,
+        sequence_dir: Union[str, Path],
+        output_scenario_dir: Union[str, Path],
+        data_dir: Optional[Union[str, Path]] = None,
+        shared_graph_dir: Optional[Union[str, Path]] = None,
+        shared_db_path: Optional[Union[str, Path]] = None,
+        pothole_weights: Optional[Union[str, Path]] = None,
+        vehicle_weights: Optional[Union[str, Path]] = None,
+        sample_step: int = 10,
+        max_frames: Optional[int] = 100,
+        utm_zone: int = 44,
+    ) -> Dict[str, Any]:
+        """Runs the complete IRN pipeline on a real IDD Multimodal sequence."""
+        start_time = time.time()
+        s_dir = Path(sequence_dir).resolve()
+        seq_id = s_dir.name
+        out_scen = Path(output_scenario_dir).resolve()
+        out_scen.mkdir(parents=True, exist_ok=True)
+
+        d_dir = Path(data_dir or f"data/idd_{seq_id}").resolve()
+        d_dir.mkdir(parents=True, exist_ok=True)
+
+        log_event(f"=== Processing IDD Sequence: {seq_id} ===", reason_code="ORCHESTRATOR-IDD-START")
+
+        # Step 1: IDD Adapter (YOLO Inference + GPS Normalization)
+        from irn.m2_cv_interface.idd_adapter import IDDAdapter
+        adapter = IDDAdapter(sequence_id=seq_id)
+        ingest_res = adapter.process_sequence(
+            sequence_dir=s_dir,
+            out_dir=d_dir,
+            pothole_weights=pothole_weights,
+            vehicle_weights=vehicle_weights,
+            sample_step=sample_step,
+            max_frames=max_frames,
+        )
+
+        # Step 2: Road Network (Fetch or reuse shared graph)
+        if shared_graph_dir and (Path(shared_graph_dir) / "edges.gpkg").exists():
+            edges_gpkg = Path(shared_graph_dir) / "edges.gpkg"
+            nodes_gpkg = Path(shared_graph_dir) / "nodes.gpkg"
+            log_event(f"Reusing shared OSM graph from {shared_graph_dir}", reason_code="GRAPH-REUSED")
+        else:
+            fetcher = OSMFetcher()
+            bbox = ingest_res["bbox"]
+            g_dir = d_dir / "d1_graph"
+            G = fetcher.fetch_by_bbox(bbox, allow_offline_fallback=True)
+            d1_res = fetcher.process_and_export(G, g_dir, query_metadata={"bbox": list(bbox)})
+            edges_gpkg = d1_res["edges_gpkg"]
+            nodes_gpkg = d1_res["nodes_gpkg"]
+
+        # Step 3: M3 Geospatial Fusion
+        d3_db = Path(shared_db_path) if shared_db_path else (d_dir / "d3_store" / "anomalies.db")
+        d4_dir = d_dir / "d4_enriched"
+        fusion_start = time.time()
+        fusion_res = run_geospatial_fusion(
+            edges_gpkg_path=edges_gpkg,
+            detections_parquet_path=ingest_res["detections_parquet"],
+            gps_csv_path=ingest_res["gps_csv"],
+            rig_config_path="configs/rig.yaml",
+            utm_zone=utm_zone,
+            output_d3_db=d3_db,
+            output_d4_dir=d4_dir,
+        )
+        fusion_elapsed = time.time() - fusion_start
+        throughput = measure_fusion_throughput(ingest_res["num_detections"], fusion_elapsed)
+
+        # Step 4: M4 Simulation Compilation
+        compile_res = compile_simulation_scenario(
+            enriched_edges_path=fusion_res["d4_edges_parquet"],
+            anomalies_parquet_path=fusion_res["d4_anomalies_parquet"],
+            nodes_gpkg_path=nodes_gpkg,
+            out_dir=out_scen,
+            lanefree_mode="collapse",
+            utm_zone=utm_zone,
+        )
+
+        val_xodr = validate_opendrive_xml(compile_res["network_xodr"])
+        val_sumo = validate_sumo_scenario(out_scen)
+        elapsed_total = round(time.time() - start_time, 2)
+
+        # Manifest
+        artifact_hashes = {
+            "edges_gpkg": compute_sha256(edges_gpkg),
+            "nodes_gpkg": compute_sha256(nodes_gpkg),
+            "detections_parquet": compute_sha256(ingest_res["detections_parquet"]),
+            "anomalies_db": compute_sha256(d3_db),
+            "enriched_edges_parquet": compute_sha256(fusion_res["d4_edges_parquet"]),
+            "anomalies_parquet": compute_sha256(fusion_res["d4_anomalies_parquet"]),
+            "network_net_xml": compute_sha256(compile_res["network_net_xml"]),
+            "network_xodr": compute_sha256(compile_res["network_xodr"]),
+            "scenario_sumocfg": compute_sha256(compile_res["scenario_sumocfg"]),
+        }
+
+        manifest = {
+            "project": "IRN Engine",
+            "sequence_id": seq_id,
+            "version": "0.1.0",
+            "execution_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "total_elapsed_sec": elapsed_total,
+            "fusion_throughput_dets_per_sec": throughput,
+            "traffic_rule": "LHT",
+            "utm_zone": utm_zone,
+            "statistics": {
+                "num_gps_fixes": ingest_res["num_gps_fixes"],
+                "num_detections_ingested": ingest_res["num_detections"],
+                "num_raw_observations_fused": fusion_res["num_raw_observations"],
+                "num_canonical_anomalies": fusion_res["num_canonical_anomalies"],
+                "num_confirmed_anomalies": fusion_res["num_confirmed"],
+            },
+            "validation": {
+                "opendrive_valid": val_xodr.is_valid,
+                "sumo_scenario_valid": val_sumo.is_valid,
+            },
+            "artifact_sha256": artifact_hashes,
+        }
+        manifest_path = out_scen / "MANIFEST.json"
+        atomic_write_json(manifest_path, manifest)
+
+        log_event(f"=== IDD Sequence {seq_id} Finished in {elapsed_total}s ===", reason_code="ORCHESTRATOR-IDD-DONE")
+
+        return {
+            "sequence_id": seq_id,
+            "output_dir": out_scen,
+            "manifest_path": manifest_path,
+            "manifest": manifest,
+            "compile_results": compile_res,
+            "shared_graph_dir": Path(edges_gpkg).parent,
+        }
+
+    def run_idd_batch(
+        self,
+        dataset_dir: Union[str, Path],
+        output_base_dir: Union[str, Path] = "scenarios",
+        sequences: Optional[List[str]] = None,
+        pothole_weights: Optional[Union[str, Path]] = None,
+        vehicle_weights: Optional[Union[str, Path]] = None,
+        sample_step: int = 10,
+        max_frames: Optional[int] = 100,
+        unified_multi_pass: bool = True,
+        utm_zone: int = 44,
+    ) -> Dict[str, Any]:
+        """Runs batch processing over all sequences with cross-pass anomaly accumulation."""
+        import geopandas as gpd
+        from irn.m3_fusion.storage import FusionStorage
+        from irn.m3_fusion.width_fusion import fuse_edge_widths
+
+        ds_path = Path(dataset_dir).resolve()
+        out_base = Path(output_base_dir).resolve()
+        out_base.mkdir(parents=True, exist_ok=True)
+
+        if not sequences:
+            seq_candidates = sorted([d.name for d in ds_path.iterdir() if d.is_dir() and (d / "train.csv").exists()])
+        else:
+            seq_candidates = sequences
+
+        log_event(f"Batch processing {len(seq_candidates)} sequences: {seq_candidates}", reason_code="BATCH-START")
+
+        shared_db = (Path("data") / "multi_pass" / "anomalies.db").resolve() if unified_multi_pass else None
+        if shared_db:
+            shared_db.parent.mkdir(parents=True, exist_ok=True)
+
+        shared_graph_dir: Optional[Path] = None
+        results: Dict[str, Any] = {}
+
+        for seq_name in seq_candidates:
+            seq_dir = ds_path / seq_name
+            scen_dir = out_base / f"scenario_{seq_name}"
+
+            res = self.run_idd_sequence(
+                sequence_dir=seq_dir,
+                output_scenario_dir=scen_dir,
+                shared_graph_dir=shared_graph_dir,
+                shared_db_path=shared_db,
+                pothole_weights=pothole_weights,
+                vehicle_weights=vehicle_weights,
+                sample_step=sample_step,
+                max_frames=max_frames,
+                utm_zone=utm_zone,
+            )
+            if not shared_graph_dir:
+                shared_graph_dir = res["shared_graph_dir"]
+            results[seq_name] = res
+
+        # If unified multi-pass, compile the master corridor scenario from the merged ledger
+        master_scen = None
+        if unified_multi_pass and shared_db and shared_graph_dir:
+            log_event("Compiling Unified Multi-Pass Corridor Scenario", reason_code="CORRIDOR-COMPILE")
+            corridor_dir = out_base / "corridor_multi_pass"
+            corridor_d4 = Path("data") / "multi_pass" / "d4_enriched"
+
+            storage = FusionStorage(shared_db)
+            all_canonical = storage.load_canonical_anomalies()
+            edges_gdf = gpd.read_file(shared_graph_dir / "edges.gpkg", layer="edges")
+            enriched_edges = fuse_edge_widths(edges_gdf)
+            storage.export_d4_parquet(enriched_edges, all_canonical, corridor_d4)
+
+            master_scen = compile_simulation_scenario(
+                enriched_edges_path=corridor_d4 / "enriched_edges.parquet",
+                anomalies_parquet_path=corridor_d4 / "anomalies.parquet",
+                nodes_gpkg_path=shared_graph_dir / "nodes.gpkg",
+                out_dir=corridor_dir,
+                lanefree_mode="collapse",
+                utm_zone=utm_zone,
+            )
+
+            val_xodr = validate_opendrive_xml(master_scen["network_xodr"])
+            val_sumo = validate_sumo_scenario(corridor_dir)
+            total_dets = sum(r["manifest"]["statistics"]["num_detections_ingested"] for r in results.values())
+            total_fixes = sum(r["manifest"]["statistics"]["num_gps_fixes"] for r in results.values())
+            confirmed_anoms = sum(1 for a in all_canonical if a.state == "CONFIRMED")
+
+            corridor_manifest = {
+                "project": "IRN Engine",
+                "scenario": "corridor_multi_pass",
+                "version": "0.1.0",
+                "execution_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                "traffic_rule": "LHT",
+                "utm_zone": utm_zone,
+                "multi_pass_sequences": list(results.keys()),
+                "statistics": {
+                    "num_gps_fixes": total_fixes,
+                    "num_detections_ingested": total_dets,
+                    "num_canonical_anomalies": len(all_canonical),
+                    "num_confirmed_anomalies": confirmed_anoms,
+                },
+                "validation": {
+                    "opendrive_valid": val_xodr.is_valid,
+                    "sumo_scenario_valid": val_sumo.is_valid,
+                },
+            }
+            atomic_write_json(corridor_dir / "MANIFEST.json", corridor_manifest)
+
+        return {
+            "sequences_processed": list(results.keys()),
+            "sequence_results": results,
+            "corridor_scenario": master_scen,
+        }
+

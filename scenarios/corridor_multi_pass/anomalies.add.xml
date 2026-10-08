@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Localized Physical Road Hazards & Speed Drop Zones -->
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <poi id="hazard_1f50263c" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="47.43" posLat="9.35" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_798ddf62" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="36.06" posLat="0.07" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_fa3619c9" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="43.05" posLat="6.22" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_8948ce1a" type="car" color="magenta" lane="2249842362_2249842334_0_0" pos="111.77" posLat="-5.41" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_8abe83b7" type="bus" color="magenta" lane="2249842362_2249842334_0_0" pos="164.63" posLat="-3.30" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_3a2b2190" type="bus" color="magenta" lane="2249842362_2249842334_0_0" pos="162.01" posLat="-4.51" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_f6e7ad65" type="car" color="magenta" lane="2249842362_2249842334_0_0" pos="166.75" posLat="-1.84" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_b7c0e7e4" type="car" color="magenta" lane="2249842362_2249842334_0_0" pos="161.79" posLat="-3.77" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_d6506061" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="169.41" posLat="0.90" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_3bd1c96c" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="169.36" posLat="2.27" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_6e29902d" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="169.41" posLat="4.67" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_0a34ebe3" type="two_wheeler" color="magenta" lane="2249842334_1431224451_0_0" pos="31.73" posLat="-3.76" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_429a453c" type="two_wheeler" color="magenta" lane="2249842334_1431224451_0_0" pos="49.83" posLat="2.13" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_e87afb2e" type="two_wheeler" color="magenta" lane="2249842334_1431224451_0_0" pos="39.77" posLat="-1.15" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_018d6364" type="car" color="magenta" lane="2249842334_1431224451_0_0" pos="69.00" posLat="6.25" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_d6646560" type="two_wheeler" color="magenta" lane="2249842334_1431224451_0_0" pos="79.79" posLat="-2.69" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_43e00635" type="two_wheeler" color="magenta" lane="2249842334_1431224451_0_0" pos="96.47" posLat="-4.76" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_f71cd629" type="two_wheeler" color="magenta" lane="2249842334_1431224451_0_0" pos="93.86" posLat="-2.73" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_f52c2f34" type="car" color="magenta" lane="2249842362_2249842334_0_0" pos="17.29" posLat="-2.29" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_b78cce7a" type="car" color="magenta" lane="2249842362_2249842334_0_0" pos="51.91" posLat="-1.41" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_cedd0c01" type="two_wheeler" color="magenta" lane="2249842362_2249842334_0_0" pos="169.41" posLat="2.81" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_ba580474" type="car" color="magenta" lane="2249842334_1431224451_0_0" pos="81.54" posLat="3.58" width="3.00" height="1.00" layer="2"/>
+    <poi id="hazard_2b73d235" type="car" color="magenta" lane="2249842334_1431224451_0_0" pos="122.21" posLat="-5.23" width="3.00" height="1.00" layer="2"/>
+</additional>

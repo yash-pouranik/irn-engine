@@ -135,6 +135,34 @@ class FusionStorage:
             conn.commit()
         return len(anomalies)
 
+    def load_canonical_anomalies(self) -> List[CanonicalAnomaly]:
+        """Load existing canonical anomalies from SQLite ledger for multi-pass fusion."""
+        with sqlite3.connect(self.db_path) as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT anomaly_id, edge_id, class_name, s, t, var_s, var_t,
+                       confidence, observation_count, state
+                FROM canonical_anomalies
+            """)
+            rows = cur.fetchall()
+
+        results: List[CanonicalAnomaly] = []
+        for r in rows:
+            results.append(CanonicalAnomaly(
+                anomaly_id=r[0],
+                edge_id=r[1],
+                class_name=r[2],
+                s=float(r[3]),
+                t=float(r[4]),
+                var_s=float(r[5]),
+                var_t=float(r[6]),
+                confidence=float(r[7]),
+                observation_count=int(r[8]),
+                state=str(r[9]),
+            ))
+        return results
+
+
     def export_d4_parquet(
         self,
         enriched_edges_df: pd.DataFrame,

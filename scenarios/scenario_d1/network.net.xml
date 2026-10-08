@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<net version="1.16" junctionCornerDetail="5" lefthand="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- Compiled from plain.nod.xml and plain.edg.xml -->
+    <location netOffset="0.00,0.00" convBoundary="0,0,100,100" origBoundary="0,0,100,100" projParameter="!"/>
+</net>

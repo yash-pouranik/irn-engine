@@ -136,17 +136,19 @@ def run_geospatial_fusion(
             "sigma_t": frenet.sigma_t,
         })
 
-    # 6. Multi-Pass De-duplication (Level 1 & Level 2)
+    # 6. Storage initialization & Multi-Pass De-duplication (Level 1 & Level 2)
+    storage_db = output_d3_db or "data/d3_store/anomalies.db"
+    storage = FusionStorage(storage_db)
+    existing_canonical = storage.load_canonical_anomalies()
+
     deduplicator = AnomalyDeduplicator()
     pass_anomalies = deduplicator.deduplicate_pass(raw_observations)
-    canonical_anomalies = deduplicator.merge_multi_pass([], pass_anomalies)
+    canonical_anomalies = deduplicator.merge_multi_pass(existing_canonical, pass_anomalies)
 
     # 7. Road Width Fusion
     enriched_edges = fuse_edge_widths(edges_gdf)
 
-    # 8. Storage & D3/D4 Export
-    storage_db = output_d3_db or "data/d3_store/anomalies.db"
-    storage = FusionStorage(storage_db)
+    # 8. Storage persistence & D3/D4 Export
     storage.persist_observations(raw_observations)
     storage.persist_canonical_anomalies(canonical_anomalies)
 
