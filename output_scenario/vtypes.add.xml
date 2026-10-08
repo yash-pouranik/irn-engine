@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Heterogeneous Indian Vehicle Definitions with Sublane Model -->
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <vType id="two_wheeler" vClass="motorcycle" length="1.9" width="0.7" height="1.2" minGap="1.0" minGapLat="0.2" latAlignment="arbitrary" maxSpeed="22.2" accel="3.5" decel="4.5" color="red"/>
+    <vType id="auto_rickshaw" vClass="passenger" length="2.7" width="1.4" height="1.8" minGap="1.2" minGapLat="0.3" latAlignment="arbitrary" maxSpeed="13.9" accel="2.2" decel="3.5" color="yellow"/>
+    <vType id="car" vClass="passenger" length="4.2" width="1.7" height="1.5" minGap="2.0" minGapLat="0.4" latAlignment="center" maxSpeed="27.8" accel="2.6" decel="4.5" color="white"/>
+    <vType id="bus" vClass="bus" length="10.5" width="2.5" height="3.2" minGap="2.5" minGapLat="0.6" latAlignment="center" maxSpeed="16.7" accel="1.2" decel="3.0" color="blue"/>
+    <vType id="truck" vClass="truck" length="9.0" width="2.5" height="3.5" minGap="2.5" minGapLat="0.6" latAlignment="center" maxSpeed="16.7" accel="1.0" decel="2.8" color="cyan"/>
+    <vType id="bicycle" vClass="bicycle" length="1.8" width="0.6" height="1.1" minGap="0.8" minGapLat="0.2" latAlignment="arbitrary" maxSpeed="5.5" accel="1.5" decel="3.0" color="green"/>
+</additional>

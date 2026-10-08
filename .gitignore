@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data caches (keep small fixtures, ignore runtime blobs if needed)
+data/d1_real_test/
+*.tmp
+
+# IDE
+.vscode/
+.idea/

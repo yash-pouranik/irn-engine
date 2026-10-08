@@ -1,0 +1,15 @@
+{
+  "query": {
+    "synthetic": true,
+    "road_length_m": 150.0
+  },
+  "utm_epsg": 32643,
+  "utm_zone": 43,
+  "is_northern": true,
+  "centroid_lon": 75.0,
+  "centroid_lat": 18.08870894273942,
+  "num_nodes": 2,
+  "num_edges": 1,
+  "license": "Synthetic Test Fixture",
+  "attribution": "IRN Synthetic World Generator"
+}

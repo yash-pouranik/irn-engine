@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            500000.0,
+            2000000.0
+          ],
+          [
+            500000.0,
+            2000150.0
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "1001_1002_0",
+        "width_dir_m": 7.5,
+        "lanes_effective": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "irn-engine"
+version = "0.1.0"
+description = "Automated Road Network Modeling Engine for Lane-Free Indian Traffic Simulations"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Yash Pouranik", email = "yash@example.com" },
+    { name = "Yashika Goswami", email = "yashika@example.com" },
+    { name = "Vipul Yadav", email = "vipul@example.com" },
+    { name = "Vivek Tekwani", email = "vivek@example.com" }
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "pydantic>=2.0",
+    "shapely>=2.0",
+    "pyproj>=3.5",
+    "typer>=0.9.0",
+    "pyyaml>=6.0"
+]
+
+[project.optional-dependencies]
+geo = [
+    "geopandas>=0.14",
+    "osmnx>=2.0"
+]
+cv = [
+    "opencv-python-headless>=4.8",
+    "ultralytics>=8.0"
+]
+dev = [
+    "pytest>=7.0",
+    "lxml>=4.9"
+]
+
+[project.scripts]
+irn = "irn.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["irn*"]

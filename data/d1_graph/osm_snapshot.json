@@ -1,0 +1,24 @@
+{
+  "query": {
+    "bbox": [
+      78.345,
+      17.44,
+      78.36,
+      17.452
+    ],
+    "default": true,
+    "offline": true
+  },
+  "timestamp": "2026-10-08T09:06:00.303900+00:00",
+  "osmnx_version": "2.1.1",
+  "utm_epsg": 32644,
+  "utm_zone": 44,
+  "is_northern": true,
+  "centroid_lon": 78.3525,
+  "centroid_lat": 17.446,
+  "num_nodes": 9,
+  "num_edges": 24,
+  "total_length_km": 17.539,
+  "license": "Open Database License (ODbL) 1.0",
+  "attribution": "\u00a9 OpenStreetMap contributors"
+}

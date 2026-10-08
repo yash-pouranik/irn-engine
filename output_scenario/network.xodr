@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenDRIVE>
+    <header revMajor="1" revMinor="6" name="IRN_Network" version="1.0" date="2026-10-08T09:07:20.044437+00:00">
+        <geoReference><![CDATA[+proj=utm +zone=44 +north +datum=WGS84 +units=m +no_defs]]></geoReference>
+    </header>
+    <road name="1001_1002_0" length="150.000" id="1" junction="-1" rule="LHT">
+        <link/>
+        <planView>
+            <geometry s="0.000" x="500000.000" y="2000000.000" hdg="0.0000" length="150.000">
+                <line/>
+            </geometry>
+        </planView>
+        <lanes>
+            <laneSection s="0.000">
+                <center>
+                    <lane id="0" type="none" level="false"/>
+                </center>
+                <left>
+                    <lane id="1" type="driving" level="false">
+                        <width sOffset="0.000" a="7.500" b="0.0" c="0.0" d="0.0"/>
+                    </lane>
+                </left>
+            </laneSection>
+        </lanes>
+        <objects/>
+    </road>
+</OpenDRIVE>

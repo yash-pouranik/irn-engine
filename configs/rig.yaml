@@ -1,0 +1,27 @@
+# Sensor and Rig Calibration Configuration
+# Modules: M2 (CV), M3 (Fusion Math)
+
+camera:
+  # Intrinsic matrix parameters [fx, 0, cx; 0, fy, cy; 0, 0, 1]
+  # Calibrated for standard IDD front-facing camera (1920x1080 native / 1280x720 scaled)
+  image_width: 1920
+  image_height: 1080
+  fx: 1380.0
+  fy: 1380.0
+  cx: 960.0
+  cy: 540.0
+
+mounting:
+  height_m: 1.5           # Camera height above ground plane z = -h
+  pitch_deg: -2.5         # Slight downward tilt towards road surface (degrees)
+  roll_deg: 0.0           # Horizontal alignment
+  yaw_deg: 0.0            # Forward facing
+  # Translation vector from GPS antenna to camera center in vehicle frame (X, Y, Z) in meters
+  gps_to_cam_translation_m: [1.2, 0.0, 0.3]
+
+processing_gates:
+  min_range_m: 4.0        # Range gate minimum (meters)
+  max_range_m: 30.0       # Range gate maximum (meters)
+  min_confidence: 0.35    # M3 final gating confidence (M2 extracts >= 0.25)
+  pixel_sigma_v: 2.0      # Pixel error standard deviation for bottom-center ground contact
+  pitch_sigma_deg: 0.5    # Mounting angle vibration tolerance

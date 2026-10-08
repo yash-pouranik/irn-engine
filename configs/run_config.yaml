@@ -1,0 +1,51 @@
+# Global Pipeline Run Configuration
+
+project:
+  name: "irn-engine"
+  version: "0.1.0"
+  traffic_rule: "LHT"      # Left-Hand Traffic (Strict Indian convention)
+
+m1_fetcher:
+  # Area bounding box: [west, south, east, north] (EPSG:4326)
+  # Default sample: Gachibowli / IIIT-Hyderabad financial district corridor
+  bbox: [78.3400, 17.4350, 78.3650, 17.4550]
+  network_type: "drive"
+  simplify: true
+  retain_all: false
+  timeout_sec: 60
+  max_retries: 5
+  user_agent: "IRN-Engine-SVIIT/1.0 (academic research; contact: yash@example.com)"
+
+m2_cv:
+  conf_threshold: 0.25
+  classes:
+    - "pothole"
+    - "speed_breaker"
+    - "barrier"
+    - "barricade"
+    - "parked_vehicle_obstruction"
+    - "two_wheeler"
+    - "auto_rickshaw"
+    - "car"
+    - "bus"
+    - "truck"
+    - "bicycle"
+    - "pedestrian"
+    - "stray_animal"
+
+m3_fusion:
+  gps_max_dt_sec: 0.2
+  gps_speed_limit_mps: 45.0
+  hmm_candidate_radius_m: 35.0
+  hmm_max_candidates: 8
+  hmm_bearing_filter_deg: 100.0
+  hmm_sigma_gps_m: 5.0
+  hmm_beta_m: 10.0
+  dedup_chi2_gate: 9.21    # Chi-square df=2, p=0.01
+  dedup_min_observations: 2
+
+m4_compiler:
+  lanefree_mode: "collapse"
+  lateral_resolution_m: 0.6
+  step_length_s: 0.1
+  sublane_min_gap_lat_m: 0.2

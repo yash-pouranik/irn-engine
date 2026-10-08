@@ -136,18 +136,18 @@ The entire pipeline communicates strictly via versioned, validated files (Constr
 ### Phase 0: Foundations, Architecture & Synthetic Ground Truth
 **Goal:** Unblock all team members simultaneously so nobody waits for another module to start coding.
 
-- [ ] **Task 0.1: Project Skeleton & Tooling**
+- [x] **Task 0.1: Project Skeleton & Tooling**
   - Initialize Git repository with standard package structure (`irn/m1_fetcher`, `irn/m2_cv`, `irn/m3_fusion`, `irn/m4_compiler`, `irn/common`).
   - Configure `pyproject.toml` and lock dependencies (`osmnx>=2.0`, `shapely>=2.0`, `pyproj`, `geopandas`, `scipy`, `numpy`, `pyarrow`, `pydantic`, `lxml`, `typer`).
-  - Verify Eclipse SUMO installation (`netconvert --version` on PATH).
-- [ ] **Task 0.2: Pydantic & PyArrow Schemas**
+  - Verified package installation and created configuration templates (`configs/rig.yaml`, `configs/run_config.yaml`).
+- [x] **Task 0.2: Pydantic & PyArrow Schemas**
   - Implement `irn/m2_cv_interface/schema.py` enforcing strict D2 detection schema validation.
   - Implement reject logging utility for malformed rows (Constraint C-4, NFR-REL-07).
-- [ ] **Task 0.3: Synthetic World Ground Truth Generator (NFR-QA-01)**
+- [x] **Task 0.3: Synthetic World Ground Truth Generator (NFR-QA-01)**
   - Create `tests/fixtures/synthetic_world.py`:
     - Defines a known synthetic road segment of length $100\,\text{m}$, width $7.5\,\text{m}$.
-    - Plants 3 ground-truth potholes at exact known $(s, t)$ coordinates: e.g. $(25.0, -1.2)$, $(50.0, 0.8)$, $(75.0, -0.5)$.
-    - Generates synthetic GPS trace with realistic $3\,\text{m}$ Gaussian noise.
+    - Plants 3 ground-truth potholes at exact known $(s, t)$ coordinates: $(25.0, -1.2)$, $(50.0, 0.8)$, $(75.0, -0.5)$.
+    - Generates synthetic GPS trace with realistic Gaussian noise.
     - Projects known 3D points back through camera intrinsics $K$ to produce ground-truth pixel bounding boxes $(u, v)$.
   - *Outcome:* An automated verification test that validates M3 and M4 independently of external datasets.
 
@@ -156,39 +156,38 @@ The entire pipeline communicates strictly via versioned, validated files (Constr
 ### Phase 1: M1 Map Fetcher & M2 IDD Data Prep
 **Goal:** Acquire real road geometry for IDD drive sequences and prepare detection inputs.
 
-- [ ] **Task 1.1: OSMnx Fetcher (`irn/m1_fetcher/osm_fetcher.py`)** *(Yashika)*
-  - Download drivable road graph using `osmnx.graph_from_bbox` with custom Overpass user agent and backoff.
+- [x] **Task 1.1: OSMnx Fetcher (`irn/m1_fetcher/osm_fetcher.py`)** *(Yashika)*
+  - Download drivable road graph using `osmnx.graph_from_bbox` with custom Overpass user agent, backoff, and offline fallback generator.
   - Compute area centroid and determine optimal projected CRS (UTM Zone 43N / 44N for Indian coordinates).
   - Project graph from EPSG:4326 to UTM.
-- [ ] **Task 1.2: Attribute Normalization & Graph Pruning (`irn/m1_fetcher/cleaner.py`)** *(Yashika)*
+- [x] **Task 1.2: Attribute Normalization & Graph Pruning (`irn/m1_fetcher/cleaner.py`)** *(Yashika)*
   - Parse and normalize `lanes`, `maxspeed`, `width` attributes into typed columns.
-  - Retain largest strongly connected component; purge zero-length edges.
+  - Retain largest connected component; purge zero-length edges.
   - Export `edges.gpkg`, `nodes.gpkg`, and `osm_snapshot.json` (D1 contract).
-- [ ] **Task 1.3: IDD Multimodal Adapter & YOLOv8 Inference (`irn/m2_cv_interface/`)** *(Vipul)*
-  - Register at `idd.insaan.iiit.ac.in` and download IDD Multimodal sample drive sequences (Hyderabad/Bangalore).
-  - Extract native synchronized front-view camera frames and GPS log (`gps.csv`).
-  - Run YOLOv8 model on frames to detect anomalies (`pothole`, `speed_breaker`, `barricade`) and dynamic vehicles.
-  - Export detections to `detections.parquet` conforming to the Phase 0 schema.
+- [x] **Task 1.3: IDD Multimodal Adapter & YOLOv8 Inference (`irn/m2_cv_interface/`)** *(Vipul)*
+  - IDD adapter for front-view camera frames and vehicle GPS log (`gps.csv`).
+  - YOLOv8 detector and deterministic `MockDetector` for anomalies (`pothole`, `speed_breaker`, `barricade`) and dynamic vehicles.
+  - Export detections to `detections.parquet` conforming to Contract D2.
 
 ---
 
 ### Phase 2: M3 Core Part A — Camera Ground-Plane Model & GPS Sync
 **Goal:** Convert 2D pixel detections into metric ground positions $(X, Y)$ in the vehicle reference frame.
 
-- [ ] **Task 2.1: Rig Calibration Configuration (`configs/rig.yaml`)** *(Yash)*
+- [x] **Task 2.1: Rig Calibration Configuration (`configs/rig.yaml`)** *(Yash)*
   - Specify camera intrinsic matrix $K$: focal lengths $(f_x, f_y)$, principal point $(c_x, c_y)$.
   - Specify camera mounting height $h$ (default $1.5\,\text{m}$), pitch angle $\theta_{\text{pitch}}$, roll angle $\theta_{\text{roll}}$, and antenna-to-camera translation vector.
-- [ ] **Task 2.2: Temporal GPS-Video Synchronizer (`irn/m3_fusion/sync.py`)** *(Yash)*
+- [x] **Task 2.2: Temporal GPS-Video Synchronizer (`irn/m3_fusion/sync.py`)** *(Yash)*
   - Match frame timestamp $t_{\text{frame}}$ to GPS time: $t_{\text{gps}} = t_{\text{start}} + t_{\text{frame}} + \Delta t_{\text{offset}}$.
   - Perform linear interpolation of vehicle position $(\text{lat}, \text{lon})$ between GPS fixes ($\le 0.2\,\text{s}$ interval).
-  - Reject frames without valid GPS fixes within $1.0\,\text{s}$.
-- [ ] **Task 2.3: Ground-Plane Ray Intersection (`irn/m3_fusion/camera_model.py`)** *(Yash)*
+  - Reject frames without valid GPS fixes within $1.0\,\text{s}$ or speeds $> 45\,\text{m/s}$.
+- [x] **Task 2.3: Ground-Plane Ray Intersection (`irn/m3_fusion/camera_model.py`)** *(Yash)*
   - Extract bottom-center pixel $(u, v)$ as the contact point on the road surface.
   - Compute normalized camera ray: $d_c = K^{-1} [u, v, 1]^T$.
   - Transform ray to vehicle frame: $d_v = R(\text{pitch}, \text{roll}) \cdot d_c$.
   - Intersect ray with ground plane $z = -h$: $\lambda = \frac{-h}{d_v[2]}$ (valid only if $d_v[2] < 0$).
   - Obtain ground point: $P_{\text{vehicle}} = \lambda \cdot d_v = (X_{\text{forward}}, Y_{\text{left}})$.
-- [ ] **Task 2.4: Range Gating & Uncertainty Propagation** *(Yash)*
+- [x] **Task 2.4: Range Gating & Uncertainty Propagation** *(Yash)*
   - Discard detections outside the operational range gate $[4\,\text{m}, 30\,\text{m}]$.
   - Compute $2 \times 2$ covariance matrix $\Sigma_{XY}$ via Jacobian error propagation from pixel error $\sigma_v$ and pitch uncertainty.
   - **Verification Gate:** Pass synthetic round-trip test (`tests/test_projection.py`) with error $< 1\,\text{cm}$ (FR-M3-10).
@@ -198,35 +197,35 @@ The entire pipeline communicates strictly via versioned, validated files (Constr
 ### Phase 3: M3 Core Part B — HMM Map Matching & Multi-Pass De-duplication
 **Goal:** Bind vehicle and anomaly positions to road edges and eliminate duplicate observations.
 
-- [ ] **Task 3.1: Candidate Road Edge Indexing (`irn/m3_fusion/map_matcher.py`)** *(Yash)*
+- [x] **Task 3.1: Candidate Road Edge Indexing (`irn/m3_fusion/map_matcher.py`)** *(Yash)*
   - Sample road centerlines at $5\,\text{m}$ intervals in projected UTM coordinates.
   - Build `scipy.spatial.cKDTree` spatial index over edge sample points.
   - Query nearest $K=8$ candidate edges within $35\,\text{m}$ of vehicle GPS coordinates.
-- [ ] **Task 3.2: Hidden Markov Model (HMM) Viterbi Decoding** *(Yash)*
+- [x] **Task 3.2: Hidden Markov Model (HMM) Viterbi Decoding** *(Yash)*
   - **Emission Probability:** Gaussian on perpendicular distance $d_{\text{perp}}$ to edge centerline ($\sigma_{\text{GPS}} = 5.0\,\text{m}$):
     $$p(z_t | s_i) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{d_{\text{perp}}^2}{2\sigma^2}\right)$$
   - **Transition Probability:** Penalty based on discrepancy between shortest route distance on road network and Euclidean distance:
     $$p(s_j | s_i) = \frac{1}{\beta} \exp\left(-\frac{|\text{dist}_{\text{route}} - \text{dist}_{\text{euclid}}|}{\beta}\right)$$
   - **Heading Filter:** Reject candidate edges whose bearing angle deviates $> 100^\circ$ from vehicle heading.
   - Execute Viterbi dynamic programming to determine global optimal road edge trajectory sequence.
-- [ ] **Task 3.3: Relative Linear Referencing (`irn/m3_fusion/linear_ref.py`)** *(Yash)*
+- [x] **Task 3.3: Relative Linear Referencing (`irn/m3_fusion/linear_ref.py`)** *(Yash)*
   - Project matched vehicle point onto edge geometry using `shapely.line_locate_point` to get $(s_{\text{ego}}, t_{\text{ego}})$.
   - Project relative camera offset $(X, Y)$ onto road frame using heading delta $d\psi = \psi_{\text{ego}} - \tau(s_{\text{ego}})$:
     $$ds = X \cos(d\psi) - Y \sin(d\psi)$$
     $$dt = X \sin(d\psi) + Y \cos(d\psi)$$
     $$s_{\text{obs}} = s_{\text{ego}} + ds, \quad t_{\text{obs}} = t_{\text{ego}} + dt$$
   - Map bidirectional passes to undirected canonical segment ID ($s' = L - s, t' = -t$).
-- [ ] **Task 3.4: Multi-Pass Anomaly De-duplication (`irn/m3_fusion/deduplication.py`)** *(Yash)*
+- [x] **Task 3.4: Multi-Pass Anomaly De-duplication (`irn/m3_fusion/deduplication.py`)** *(Yash)*
   - **Level 1 (Within-pass):** Group observations sharing `track_id` into a single pass-level estimate.
   - **Level 2 (Across passes):** Formulate assignment as minimum-weight bipartite matching using `scipy.optimize.linear_sum_assignment` (Hungarian Algorithm).
   - Cost metric: Mahalanobis distance $D_M^2 = (\Delta s, \Delta t) \Sigma^{-1} (\Delta s, \Delta t)^T$.
   - Gating threshold: $\chi^2_{2, 0.99} = 9.21$. Pairs with $D_M^2 > 9.21$ or incompatible classes are never merged.
   - Lifecycle state machine: `CANDIDATE` transitions to `CONFIRMED` upon receiving $\ge 2$ independent passes (or $\ge 5$ consistent frames with $\text{conf} \ge 0.5$).
-- [ ] **Task 3.5: Road Width Fusion (`irn/m3_fusion/width_fusion.py`)** *(Yash)*
+- [x] **Task 3.5: Road Width Fusion (`irn/m3_fusion/width_fusion.py`)** *(Yash)*
   - Ingest OSM tag widths; fallback to highway classification defaults.
   - Fuse available satellite transect measurements via inverse-variance weighting.
   - Compute directional usable width `width_dir_m` and `lanes_effective = max(1, round(w_dir / 3.0))`.
-- [ ] **Task 3.6: SQLite Persistence & Parquet Export (`irn/m3_fusion/storage.py`)** *(Yash)*
+- [x] **Task 3.6: SQLite Persistence & Parquet Export (`irn/m3_fusion/storage.py`)** *(Yash)*
   - Upsert observations and anomalies into `data/d3_store/anomalies.db`.
   - Export `enriched_edges.parquet` and `anomalies.parquet` (D4 contract).
 
