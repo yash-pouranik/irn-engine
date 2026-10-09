@@ -8,13 +8,18 @@ version = "0.1.0"
 description = "Automated Road Network Modeling Engine for Lane-Free Indian Traffic Simulations"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
     { name = "Yash Pouranik", email = "yash@example.com" },
     { name = "Yashika Goswami", email = "yashika@example.com" },
     { name = "Vipul Yadav", email = "vipul@example.com" },
     { name = "Vivek Tekwani", email = "vivek@example.com" }
 ]
+
+[project.urls]
+Homepage = "https://github.com/yash-pouranik/irn-engine"
+Repository = "https://github.com/yash-pouranik/irn-engine"
+Issues = "https://github.com/yash-pouranik/irn-engine/issues"
 dependencies = [
     "numpy>=1.24",
     "scipy>=1.10",

@@ -1,6 +1,7 @@
 # IRN Engine (`irn`)
 ### Automated Road Network Modeling Engine for Lane-Free Indian Traffic Simulations
 
+[![PyPI Version](https://img.shields.io/pypi/v/irn-engine.svg?color=blue)](https://pypi.org/project/irn-engine/)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Traffic Convention](https://img.shields.io/badge/Traffic-Left--Hand%20(LHT)-green.svg)]()
