@@ -1,0 +1,12 @@
+# Overrides for GitHub Linguist language statistics
+# Force GitHub to recognize IRN Engine as a 100% Python repository
+
+*.html linguist-detectable=false
+*.xml linguist-detectable=false
+*.json linguist-detectable=false
+*.geojson linguist-detectable=false
+preview.html linguist-vendored=true
+mapbox_viewer.html linguist-vendored=true
+scenarios/** linguist-vendored=true
+output_idd_d0/** linguist-vendored=true
+data/** linguist-vendored=true
