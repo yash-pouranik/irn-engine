@@ -84,17 +84,25 @@ def compile_simulation_scenario(
     xodr_builder = OpenDriveBuilder(utm_zone=utm_zone, is_northern=is_northern, traffic_rule="LHT")
     xodr_file = xodr_builder.build_xodr(edges_df, anom_df, out / "network.xodr")
 
-    # 7. Generate preview.geojson
+    # 7. Generate preview.geojson (reprojected to standard WGS84 EPSG:4326 for GIS/web viewers)
+    from pyproj import Transformer
+    from shapely.ops import transform
+    utm_epsg = 32600 + utm_zone if is_northern else 32700 + utm_zone
+    to_wgs84 = Transformer.from_crs(f"EPSG:{utm_epsg}", "EPSG:4326", always_xy=True).transform
+
     preview_file = out / "preview.geojson"
     features = []
+    edge_geom_map = {}
     for _, r in edges_df.iterrows():
         geom_wkt = r.get("geometry_wkt", None)
         if geom_wkt:
             try:
-                g = wkt.loads(geom_wkt)
+                g_utm = wkt.loads(geom_wkt)
+                edge_geom_map[str(r.get("edge_id", ""))] = g_utm
+                g_wgs84 = transform(to_wgs84, g_utm)
                 features.append({
                     "type": "Feature",
-                    "geometry": mapping(g),
+                    "geometry": mapping(g_wgs84),
                     "properties": {
                         "edge_id": str(r.get("edge_id", "")),
                         "width_dir_m": float(r.get("width_dir_m", 7.0)),
@@ -103,6 +111,28 @@ def compile_simulation_scenario(
                 })
             except Exception:
                 pass
+
+    # Include confirmed road anomalies as Point markers
+    for _, a in anom_df.iterrows():
+        eid = str(a.get("edge_id", ""))
+        s = float(a.get("s", 0.0))
+        if eid in edge_geom_map:
+            edge_geom = edge_geom_map[eid]
+            frac = max(0.0, min(1.0, s / max(1.0, edge_geom.length)))
+            pt_utm = edge_geom.interpolate(frac, normalized=True)
+            pt_wgs84 = transform(to_wgs84, pt_utm)
+            features.append({
+                "type": "Feature",
+                "geometry": mapping(pt_wgs84),
+                "properties": {
+                    "anomaly_id": str(a.get("anomaly_id", "")),
+                    "class_name": str(a.get("class_name", "pothole")),
+                    "confidence": round(float(a.get("confidence", 0.8)), 3),
+                    "marker-color": "#e11d48",
+                    "marker-symbol": "danger"
+                }
+            })
+
     geojson_data = {"type": "FeatureCollection", "features": features}
     preview_file.write_text(json.dumps(geojson_data, indent=2), encoding="utf-8")
 

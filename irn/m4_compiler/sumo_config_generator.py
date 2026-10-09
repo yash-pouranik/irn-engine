@@ -27,6 +27,7 @@ class SumoConfigGenerator:
     def generate_sumocfg(
         self,
         net_filename: str = "network.net.xml",
+        route_files: Optional[str] = None,
         additional_files: str = "vtypes.add.xml,anomalies.add.xml",
         output_file: Union[str, Path] = "scenario.sumocfg",
         begin_time: int = 0,
@@ -36,13 +37,17 @@ class SumoConfigGenerator:
         out = Path(output_file).resolve()
         out.parent.mkdir(parents=True, exist_ok=True)
 
+        if not route_files and (out.parent / "routes.rou.xml").exists():
+            route_files = "routes.rou.xml"
+
+        route_tag = f'        <route-files value="{route_files}"/>\n' if route_files else ""
         end_tag = f'<end value="{end_time}"/>' if end_time else ""
 
         content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
     <input>
         <net-file value="{net_filename}"/>
-        <additional-files value="{additional_files}"/>
+{route_tag}        <additional-files value="{additional_files}"/>
     </input>
     <processing>
         <!-- Eclipse SUMO Sublane Model Activation -->

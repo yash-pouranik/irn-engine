@@ -1,4 +1,154 @@
-{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRN Digital Twin - Interactive GIS Visualizer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: #0f172a; color: #f8fafc; }
+        #map { height: 100%; width: 100%; }
+        
+        .hud-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 18px 22px;
+            max-width: 380px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .hud-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .hud-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 14px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        .stat-val {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+        .stat-lbl {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #065f46;
+            color: #34d399;
+            margin-right: 6px;
+        }
+        .legend {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cbd5e1;
+        }
+        .dot-hazard {
+            width: 12px;
+            height: 12px;
+            background: #f43f5e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #f43f5e;
+        }
+        .line-road {
+            width: 20px;
+            height: 4px;
+            background: #38bdf8;
+            border-radius: 2px;
+            box-shadow: 0 0 8px #38bdf8;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="hud-panel">
+        <div class="hud-title">
+            <span>🚦</span> IRN Digital Twin Engine
+        </div>
+        <div class="hud-subtitle">Automated Multi-Pass Corridor Modeling &middot; Hyderabad</div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val">452</div>
+                <div class="stat-lbl">Road Edges</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #f43f5e;">23</div>
+                <div class="stat-lbl">Confirmed Hazards</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">LHT</div>
+                <div class="stat-lbl">Traffic Rule</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">0.6m</div>
+                <div class="stat-lbl">Sublane Resolution</div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <span class="badge">ASAM OpenDRIVE 1.6.1</span>
+            <span class="badge" style="background: #1e3a8a; color: #60a5fa;">SUMO Sublane</span>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="line-road"></div>
+                <span>Drivable Road Network (OSM UTM-44N)</span>
+            </div>
+            <div class="legend-item">
+                <div class="dot-hazard"></div>
+                <span>Confirmed Potholes &amp; Road Hazards</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const geojsonData = {
   "type": "FeatureCollection",
   "features": [
     {
@@ -10625,4 +10775,71 @@
       }
     }
   ]
-}
+};
+
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([17.494, 78.413], 16);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 20
+        }).addTo(map);
+
+        const satTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19
+        });
+
+        L.control.layers({
+            "Dark Mode": darkTiles,
+            "Satellite Imagery": satTiles
+        }, null, { position: 'topright' }).addTo(map);
+
+        const geoLayer = L.geoJSON(geojsonData, {
+            style: function(feature) {
+                return {
+                    color: '#38bdf8',
+                    weight: 3.5,
+                    opacity: 0.85
+                };
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: 7,
+                    fillColor: '#f43f5e',
+                    color: '#ffffff',
+                    weight: 1.5,
+                    opacity: 1,
+                    fillOpacity: 0.95
+                });
+            },
+            onEachFeature: function(feature, layer) {
+                const p = feature.properties || {};
+                if (feature.geometry.type === 'Point') {
+                    layer.bindPopup(`
+                        <div style="color:#0f172a; font-family:'Inter',sans-serif; padding:4px;">
+                            <strong style="color:#e11d48; font-size:14px;">⚠️ Confirmed Road Hazard</strong><br>
+                            <b>Class:</b> ${p.class_name || 'pothole'}<br>
+                            <b>Confidence:</b> ${p.confidence ? (p.confidence * 100).toFixed(1) + '%' : 'N/A'}<br>
+                            <b>ID:</b> <code>${p.anomaly_id ? p.anomaly_id.substring(0,8) : 'N/A'}</code>
+                        </div>
+                    `);
+                } else {
+                    layer.bindPopup(`
+                        <div style="color:#0f172a; font-family:'Inter',sans-serif; padding:4px;">
+                            <strong style="color:#0284c7; font-size:14px;">🛣️ Road Edge</strong><br>
+                            <b>Edge ID:</b> <code>${p.edge_id || 'N/A'}</code><br>
+                            <b>Width:</b> ${p.width_dir_m || 7.0} meters<br>
+                            <b>Effective Lanes:</b> ${p.lanes_effective || 1}
+                        </div>
+                    `);
+                }
+            }
+        }).addTo(map);
+
+        map.fitBounds(geoLayer.getBounds(), { padding: [60, 60] });
+    </script>
+</body>
+</html>

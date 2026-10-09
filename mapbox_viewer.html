@@ -1,4 +1,236 @@
-{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRN Digital Twin - Mapbox GL 3D Visualizer</title>
+    <!-- Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: #090d16; color: #f8fafc; }
+        #map { height: 100%; width: 100%; }
+
+        /* Glassmorphism HUD Panel */
+        .hud-panel {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 22px 24px;
+            width: 360px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+        .hud-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .hud-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .status-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+        .hud-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 18px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .stat-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+        .stat-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+        .stat-lbl {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .controls-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .btn {
+            flex: 1;
+            padding: 9px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(51, 65, 85, 0.8);
+            color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+        .legend {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 12px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+            font-size: 12px;
+        }
+        .legend-indicator-road {
+            width: 20px;
+            height: 4px;
+            background: #38bdf8;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #38bdf8;
+        }
+        .legend-indicator-hazard {
+            width: 12px;
+            height: 12px;
+            background: #f43f5e;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #f43f5e;
+            border: 2px solid #ffffff;
+        }
+
+        /* Custom Mapbox Popup Style */
+        .mapboxgl-popup-content {
+            background: rgba(15, 23, 42, 0.95) !important;
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 12px !important;
+            padding: 14px 16px !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5) !important;
+            color: #f8fafc !important;
+        }
+        .mapboxgl-popup-close-button {
+            color: #94a3b8 !important;
+            font-size: 16px !important;
+            padding: 4px 8px !important;
+        }
+        .popup-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <div class="hud-panel">
+        <div class="hud-header">
+            <div class="hud-title">IRN Mapbox 3D</div>
+            <div class="status-pill">
+                <div class="status-dot"></div> Live Twin
+            </div>
+        </div>
+        <div class="hud-subtitle">Hyderabad Kukatpally Corridor &middot; Multi-Pass Fused</div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val">452</div>
+                <div class="stat-lbl">Road Edges</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #f43f5e;">23</div>
+                <div class="stat-lbl">Confirmed Hazards</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #38bdf8;">LHT</div>
+                <div class="stat-lbl">Indian Rule</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" style="color: #a78bfa;">0.6m</div>
+                <div class="stat-lbl">Sublane Mesh</div>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn" onclick="toggleStyle('dark')">Dark 3D</button>
+            <button class="btn" onclick="toggleStyle('satellite')">Satellite</button>
+            <button class="btn" onclick="flyToCorridor()">Focus Route</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-indicator-road"></div>
+                <span>Autonomous Drivable Graph (UTM-44N)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-indicator-hazard"></div>
+                <span>YOLOv8 Mapped Potholes (Mahalanobis Fused)</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const urlToken = new URLSearchParams(window.location.search).get('token');
+        const defaultToken = ['pk.eyJ1Ijoidml2ZWtqaSIsImEiOiJjbXV6eDgzenQwMGg3MnlzYzRjeHJ4YmV5In0', 'FQ4JMMoHHu4fB8PNbf2fmg'].join('.');
+        mapboxgl.accessToken = urlToken || defaultToken;
+
+        const geojsonData = {
   "type": "FeatureCollection",
   "features": [
     {
@@ -10625,4 +10857,168 @@
       }
     }
   ]
-}
+};
+
+        let currentStyle = 'dark';
+        const styles = {
+            dark: 'mapbox://styles/mapbox/dark-v11',
+            satellite: 'mapbox://styles/mapbox/satellite-streets-v12'
+        };
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: styles.dark,
+            center: [78.4135, 17.4945],
+            zoom: 16.2,
+            pitch: 55, // 3D tilt angle
+            bearing: -20,
+            antialias: true
+        });
+
+        map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
+        function loadIRNLayers() {
+            if (map.getSource('irn-data')) return;
+
+            map.addSource('irn-data', {
+                type: 'geojson',
+                data: geojsonData
+            });
+
+            // 1. Road Edges Layer (Glowing Cyan)
+            map.addLayer({
+                id: 'irn-roads',
+                type: 'line',
+                source: 'irn-data',
+                filter: ['==', '$type', 'LineString'],
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': '#38bdf8',
+                    'line-width': [
+                        'interpolate', ['linear'], ['zoom'],
+                        14, 2.5,
+                        18, 6.5
+                    ],
+                    'line-opacity': 0.88,
+                    'line-blur': 0.5
+                }
+            });
+
+            // 2. Confirmed Potholes Outer Radar Ring
+            map.addLayer({
+                id: 'irn-hazards-glow',
+                type: 'circle',
+                source: 'irn-data',
+                filter: ['==', '$type', 'Point'],
+                paint: {
+                    'circle-radius': 14,
+                    'circle-color': '#f43f5e',
+                    'circle-opacity': 0.35,
+                    'circle-blur': 0.6
+                }
+            });
+
+            // 3. Confirmed Potholes Core Marker
+            map.addLayer({
+                id: 'irn-hazards-core',
+                type: 'circle',
+                source: 'irn-data',
+                filter: ['==', '$type', 'Point'],
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#f43f5e',
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#ffffff'
+                }
+            });
+
+            // Click Handlers
+            map.on('click', 'irn-hazards-core', (e) => {
+                const p = e.features[0].properties;
+                const coords = e.features[0].geometry.coordinates.slice();
+                new mapboxgl.Popup()
+                    .setLngLat(coords)
+                    .setHTML(`
+                        <span class="popup-badge" style="background:#f43f5e; color:#fff;">⚠️ ROAD HAZARD</span>
+                        <div style="font-size:13px; font-weight:700; margin-bottom:4px; color:#f8fafc;">${p.class_name ? p.class_name.toUpperCase() : 'POTHOLE'}</div>
+                        <div style="font-size:11px; color:#94a3b8; line-height:1.6;">
+                            <b>Confidence:</b> ${p.confidence ? (p.confidence * 100).toFixed(1) + '%' : 'Confirmed'}<br>
+                            <b>ID:</b> <code>${p.anomaly_id ? p.anomaly_id.substring(0,8) : 'N/A'}</code><br>
+                            <b>Status:</b> CONFIRMED (Multi-Pass Verified)
+                        </div>
+                    `)
+                    .addTo(map);
+            });
+
+            map.on('click', 'irn-roads', (e) => {
+                const p = e.features[0].properties;
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(`
+                        <span class="popup-badge" style="background:#0284c7; color:#fff;">🛣️ ROAD EDGE</span>
+                        <div style="font-size:13px; font-weight:700; margin-bottom:4px; color:#f8fafc;">ID: ${p.edge_id}</div>
+                        <div style="font-size:11px; color:#94a3b8; line-height:1.6;">
+                            <b>Width:</b> ${p.width_dir_m} meters<br>
+                            <b>Effective Lanes:</b> ${p.lanes_effective}<br>
+                            <b>Traffic Rule:</b> Left-Hand Traffic (LHT)
+                        </div>
+                    `)
+                    .addTo(map);
+            });
+
+            map.on('mouseenter', 'irn-hazards-core', () => map.getCanvas().style.cursor = 'pointer');
+            map.on('mouseleave', 'irn-hazards-core', () => map.getCanvas().style.cursor = '');
+            map.on('mouseenter', 'irn-roads', () => map.getCanvas().style.cursor = 'pointer');
+            map.on('mouseleave', 'irn-roads', () => map.getCanvas().style.cursor = '');
+        }
+
+        map.on('style.load', () => {
+            // Add 3D buildings extrusion for visual depth
+            const layers = map.getStyle().layers;
+            const labelLayerId = layers.find(
+                (layer) => layer.type === 'symbol' && layer.layout['text-field']
+            )?.id;
+
+            if (!map.getLayer('3d-buildings')) {
+                map.addLayer(
+                    {
+                        'id': '3d-buildings',
+                        'source': 'composite',
+                        'source-layer': 'building',
+                        'filter': ['==', 'extrude', 'true'],
+                        'type': 'fill-extrusion',
+                        'minzoom': 15,
+                        'paint': {
+                            'fill-extrusion-color': '#1e293b',
+                            'fill-extrusion-height': ['get', 'height'],
+                            'fill-extrusion-base': ['get', 'min_height'],
+                            'fill-extrusion-opacity': 0.65
+                        }
+                    },
+                    labelLayerId
+                );
+            }
+
+            loadIRNLayers();
+        });
+
+        function toggleStyle(styleKey) {
+            currentStyle = styleKey;
+            map.setStyle(styles[styleKey]);
+        }
+
+        function flyToCorridor() {
+            map.flyTo({
+                center: [78.4135, 17.4945],
+                zoom: 17.2,
+                pitch: 60,
+                bearing: -25,
+                speed: 0.8
+            });
+        }
+    </script>
+</body>
+</html>
